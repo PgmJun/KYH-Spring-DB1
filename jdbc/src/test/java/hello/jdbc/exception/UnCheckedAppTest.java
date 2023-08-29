@@ -10,39 +10,39 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class UnCheckedAppTest {
 
+	@Test
+	void unchecked() {
+		Controller controller = new Controller();
+		Assertions.assertThatThrownBy(() -> controller.request())
+			.isInstanceOf(RuntimeSQLException.class);
+
+	}
+
+	@Test
+	void printEx() {
+		Controller controller = new Controller();
+		try {
+			controller.request();
+		} catch (Exception e) {
+			log.info("ex", e);
+		}
+	}
+
 	static class Service {
 		Repository repository = new Repository();
 		NetworkClient networkClient = new NetworkClient();
 
-		@Test
-		void unchecked() {
-			Controller controller = new Controller();
-			Assertions.assertThatThrownBy(() -> controller.request())
-				.isInstanceOf(RuntimeSQLException.class);
-
-		}
-
-		@Test
-		void printEx() {
-			Controller controller = new Controller();
-			try {
-				controller.request();
-			} catch (Exception e) {
-				log.info("ex", e);
-			}
-		}
-
-		static class Controller {
-			Service service = new Service();
-
-			public void request() {
-				service.logic();
-			}
-		}
-
 		public void logic() {
 			repository.call();
 			networkClient.call();
+		}
+	}
+
+	static class Controller {
+		Service service = new Service();
+
+		public void request() {
+			service.logic();
 		}
 	}
 
@@ -77,9 +77,11 @@ public class UnCheckedAppTest {
 		public RuntimeSQLException(Exception e) {
 			super(e);
 		}
+
 		public RuntimeSQLException(String message) {
 			super(message);
 		}
+
 		public RuntimeSQLException() {
 		}
 	}
