@@ -8,7 +8,6 @@ import java.sql.SQLException;
 
 import javax.sql.DataSource;
 
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.dao.DataAccessException;
@@ -46,7 +45,6 @@ public class SpringExceptionTranslatorTest {
 		}
 	}
 
-
 	@Test
 	void exceptionTranslator() {
 		String sql = "select bad grammer";
@@ -55,7 +53,7 @@ public class SpringExceptionTranslatorTest {
 			Connection con = dataSource.getConnection();
 			PreparedStatement pstmt = con.prepareStatement(sql);
 			pstmt.executeQuery();
-		}catch (SQLException e) {
+		} catch (SQLException e) {
 			assertThat(e.getErrorCode()).isEqualTo(42122);
 
 			SQLErrorCodeSQLExceptionTranslator exTranslator = new SQLErrorCodeSQLExceptionTranslator(
